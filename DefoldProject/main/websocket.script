@@ -12,7 +12,7 @@ function init(self)
 
 		elseif data.event == websocket.EVENT_MESSAGE then
 			local message = data.message
-			print("received message, (RAW TEXT) =>");
+			print("received message, (RAW) =>");
 			pprint(message)
 
 			local binary_message = {}
