@@ -1,18 +1,42 @@
 
 function init(self)
+	local this = self
 	self.ws = websocket.connect("ws://localhost:8080", {}, function(self, conn, data)
+		print("EVENT:", data.event);
 		if data.event == websocket.EVENT_DISCONNECTED then
-			print("internal: DISCONNECTED")
+			print("WebSocket: EVENT_DISCONNECTED")
+			pprint(data)
+
+			-- would be nice to support exposing the data.code here
+			-- data.code ?
 
 		elseif data.event == websocket.EVENT_CONNECTED then
-			print("internal: CONNECTED")
+			print("WebSocket: EVENT_CONNECTED")
+			pprint(data)
+
+			--
+			-- request to "close" after 1 seconds
+			--
+			timer.delay(1, false, function()
+				-- EVENT_DISCONNECTED
+				-- websocket.disconnect(this.ws)
+
+				-- EVENT_DISCONNECTED
+				-- EVENT_ERROR (SHOULD NOT HAPPEN)
+				websocket.send(this.ws, "close")
+
+				-- EVENT_DISCONNECTED
+				-- EVENT_ERROR (SHOULD NOT HAPPEN)
+				-- websocket.send(this.ws, "terminate")
+			end)
 
 		elseif data.event == websocket.EVENT_ERROR then
-			print("internal: ERROR", data.error)
+			print("WebSocket: EVENT_ERROR")
+			pprint(data)
 
 		elseif data.event == websocket.EVENT_MESSAGE then
 			local message = data.message
-			print("received message, (RAW) =>");
+			print("WebSocket: EVENT_MESSAGE, (RAW) =>");
 			pprint(message)
 
 			local binary_message = {}
@@ -25,6 +49,7 @@ function init(self)
 		end
 	end)
 end
+
 
 function final(self)
 	websocket.disconnect(self.ws)

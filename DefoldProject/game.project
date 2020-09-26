@@ -13,5 +13,5 @@ input_method = HiddenInputField
 
 [project]
 title = DefoldProject
-dependencies = https://github.com/defold/extension-websocket/archive/master.zip
+dependencies = https://github.com/defold/extension-websocket/archive/issue-6-multiple-messages.zip
 
